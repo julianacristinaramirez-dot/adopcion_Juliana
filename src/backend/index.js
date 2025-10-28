@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import userRoutes from './routes/userRoutes.js';
 import emailRoutes from './routes/emailRoutes.js';
+import authRouters from './routes/authRouters.js';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './swagger.js';
 
@@ -26,6 +27,8 @@ app.get('/',(req, res) => {
 //Rutas que deseo usar
 app.use('/api/users',userRoutes);
 app.use('/api/email',emailRoutes);
+app.use('/api/auth',authRouters);
+
 
 app.listen(PORT,()=>{
     console.log("Servidor corriendo exitosamente 🚀")
