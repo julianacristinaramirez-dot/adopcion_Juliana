@@ -1,5 +1,5 @@
 import express from 'express';
-import { userController } from '../controllers/userController.js';
+import { userControllers } from '../userControllers/userControllers.js';
 
 const router = express.Router();
 
@@ -31,7 +31,7 @@ const router = express.Router();
  *        200:
  *          description: OK
  */
-router.get('/',userController.getUsers);
+router.get('/',userControllers.getUsers);
 /**
  * @swagger
  * /api/users:
@@ -62,7 +62,7 @@ router.get('/',userController.getUsers);
  *      500:
  *        description: Error del servidor
  */
-router.post('/',userController.createUser);
+router.post('/',userControllers.createUser);
 /**
  * @swagger
  * /api/users:
@@ -102,7 +102,7 @@ router.post('/',userController.createUser);
  *         description: Error interno del servidor
  */
 
-router.put('/:id',userController.updateUser);
+router.put('/:id',userControllers.updateUser);
 /**
  * @swagger
  * /api/users/{id}:
@@ -123,7 +123,7 @@ router.put('/:id',userController.updateUser);
  *       500:
  *         description: Error del servidor
  */
-router.delete('/:id', userController.deleteUser);
+router.delete('/:id', userControllers.deleteUser);
 //metodo para modificar patch
 
 export default router;
