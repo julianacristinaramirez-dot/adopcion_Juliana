@@ -13,6 +13,15 @@ export const hashPassword = async (password) => {
 export const comparePassword = async (password, hashedPassword) => {
     return await bcrypt.compare(password, hashedPassword);
 }
+
+// generar token 
+export const generateToken = (userId, email) => {
+    return jwt.sign(
+        { id: userId, email },
+        { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    );
+}
+
 //verificar JWT
 export const verifyToken = (token) => {
     try {
