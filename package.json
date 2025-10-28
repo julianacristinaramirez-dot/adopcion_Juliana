@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "@prisma/client": "^6.18.0",
+    "prisma": "^6.18.0"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
