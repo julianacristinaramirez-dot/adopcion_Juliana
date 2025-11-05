@@ -1,17 +1,17 @@
-import espress from 'express';
-import { authControllers } from '../authControllers/authControllers.js';
-
+import express from 'express';
+import { authControllers } from '../controllers/authControllers.js';
+console.log("authControllers:", authControllers);
 
 const router = express.Router();
 
 /**
  * @swagger
  * components:
- * securitySchemes:
- *   bearerAuth:
- *     type: http
- *     scheme: bearer
- *     bearerFormat: JWT
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  */
 
 /**
@@ -37,13 +37,12 @@ const router = express.Router();
  *                 example: gatito29
  *     responses:
  *       201:
- *         description:  Usuario registrado correctamente
+ *         description: Usuario registrado correctamente
  *       400:
- *         description: Datos invalidos
+ *         description: Datos inválidos
  *       500:
  *         description: Error interno del servidor
  */
-
 router.post('/register', authControllers.register);
 
 export default router;
