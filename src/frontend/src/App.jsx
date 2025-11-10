@@ -15,6 +15,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/login-error" element={<LoginError />} />
         <Route path="/login-success" element={<LoginSuccess />} />
+        <Route path="/match-quiz" element={<MatchQuiz />} />
+        <Route path="/match-results" element={<MatchResults />} />
       </Routes>
     </BrowserRouter>
   );

@@ -78,14 +78,17 @@ function Home() {
                 </div>
 
                 {/* Botones principales */}
-                <div className="flex flex-col sm:flex-row justify-center gap-6 mb-20">
-                    <button className="px-8 py-4 bg-teal-600 text-white text-lg font-semibold rounded-lg hover:bg-teal-700 transform hover:scale-105 hover:shadow-xl transition-all duration-300">
-                        Ver mascotas
-                    </button>
+                <Link to="/match-quiz">
                     <button className="px-8 py-4 bg-white text-gray-800 text-lg font-semibold rounded-lg border-2 border-gray-800 hover:bg-gray-100 transform hover:scale-105 hover:shadow-xl transition-all duration-300">
                         Encuentra tu match
                     </button>
-                </div>
+                </Link>
+                <Link to="/pets">
+                    <button className="px-8 py-4 bg-teal-600 text-white text-lg font-semibold rounded-lg hover:bg-teal-700 transform hover:scale-105 hover:shadow-xl transition-all duration-300">
+                        Ver mascotas
+                    </button>
+                </Link>
+
 
                 {/* Sección de características */}
                 <div className="mb-12">
