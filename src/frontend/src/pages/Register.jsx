@@ -6,7 +6,6 @@ function Register() {
         nombre: "",
         apellido: "",
         email: "",
-        telefono: "",
         password: "",
         confirmPassword: ""
     });
@@ -54,8 +53,7 @@ function Register() {
                 body: JSON.stringify({
                     name: `${formData.nombre} ${formData.apellido}`,
                     email: formData.email,
-                    password: formData.password,
-                    telefono: formData.telefono // Si tu API lo soporta
+                    password: formData.password
                 }),
             });
 
