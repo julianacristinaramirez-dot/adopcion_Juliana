@@ -1,3 +1,4 @@
+import passport from "passport";
 import express from 'express';
 import { authControllers } from '../controllers/authControllers.js';
 console.log("authControllers:", authControllers);
