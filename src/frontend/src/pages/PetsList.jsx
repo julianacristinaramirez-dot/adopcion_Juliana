@@ -22,7 +22,7 @@ function PetsList() {
         {
             id: 1,
             name: 'Loki',
-            image: '/imagenes/loki.jpg', // Ajusta la ruta según tu estructura
+            image: '/Imagenes/Loki.jpg', // Ajusta la ruta según tu estructura
             shelter: 'Refugio San Francisco, Barcelona',
             species: 'PERRO',
             breed: 'Pastor Alemán',
@@ -34,7 +34,7 @@ function PetsList() {
         {
             id: 2,
             name: 'Mimi',
-            image: '/imagenes/mimi.jpg',
+            image: '/Imagenes/Mimi.jpg',
             shelter: 'Refugio Felino, Valencia',
             species: 'GATO',
             breed: 'Siamés',
@@ -46,7 +46,7 @@ function PetsList() {
         {
             id: 3,
             name: 'Drako',
-            image: '/imagenes/drako.jpg',
+            image: '/Imagenes/Drako.jpg',
             shelter: 'Refugio Esperanza, Madrid',
             species: 'PERRO',
             breed: 'Golden Retriever',

@@ -6,7 +6,7 @@ import LoginSuccess from "./pages/LoginSuccess";
 import LoginError from './pages/LoginError';
 import MatchQuiz from "./pages/Match";
 import MatchResults from "./pages/MatchResults";
-import PetsList from "./pages/petsList";
+import PetsList from "./pages/PetsList";
 import Favorites from './components/Favorites';
 import Profile from './components/Profile';
 import ForgotPassword from './components/ForgotPassword';
