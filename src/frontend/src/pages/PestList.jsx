@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function PetsList() {
@@ -45,8 +45,8 @@ function PetsList() {
         },
         {
             id: 3,
-            name: 'Drako',
-            image: '/Imagenes/Drako.jpg',
+            name: 'Roki',
+            image: '/Imagenes/Roki.jpg',
             shelter: 'Refugio Esperanza, Madrid',
             species: 'PERRO',
             breed: 'Golden Retriever',
@@ -58,7 +58,7 @@ function PetsList() {
         {
             id: 4,
             name: 'Luna',
-            image: '/imagenes/luna.jpg', // Añade esta imagen
+            image: '/Imagenes/luna.jpg', // Añade esta imagen
             shelter: 'Refugio Amoroso, Sevilla',
             species: 'PERRO',
             breed: 'Beagle',
@@ -93,12 +93,23 @@ function PetsList() {
         }
     ];
 
-    const toggleFavorite = (petId) => {
-        setFavorites(prev => 
-            prev.includes(petId) 
-                ? prev.filter(id => id !== petId)
-                : [...prev, petId]
-        );
+    const toggleFavorite = (pet) => {
+        const savedFavorites = localStorage.getItem('favorites');
+        let favoritesArray = savedFavorites ? JSON.parse(savedFavorites) : [];
+        
+        const isFavorite = favoritesArray.some(fav => fav.id === pet.id);
+        
+        if (isFavorite) {
+            // Eliminar de favoritos
+            favoritesArray = favoritesArray.filter(fav => fav.id !== pet.id);
+            setFavorites(favorites.filter(id => id !== pet.id));
+        } else {
+            // Agregar a favoritos
+            favoritesArray.push(pet);
+            setFavorites([...favorites, pet.id]);
+        }
+        
+        localStorage.setItem('favorites', JSON.stringify(favoritesArray));
     };
 
     // Filtrar mascotas
@@ -131,13 +142,15 @@ function PetsList() {
                         {/* Botones de navegación */}
                         <div className="flex gap-4">
                             <button className="flex items-center gap-2 px-6 py-2 bg-white text-gray-800 font-semibold rounded-lg hover:bg-gray-100 border-2 border-gray-300 transform hover:scale-105 transition-all duration-200 shadow-md">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                </svg>
-                                Favoritos
+                                <Link to="/favorites" className="flex items-center gap-2">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                    </svg>
+                                    Favoritos
+                                </Link>
                             </button>
                             <button className="px-6 py-2 bg-white text-gray-800 font-semibold rounded-lg hover:bg-gray-100 border-2 border-gray-300 transform hover:scale-105 transition-all duration-200 shadow-md">
-                                Encuentra tu Match
+                                <Link to="/match-quiz">Encuentra tu Match</Link>
                             </button>
                             <button className="px-6 py-2 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transform hover:scale-105 transition-all duration-200 shadow-md">
                                 Perfil
@@ -249,7 +262,7 @@ function PetsList() {
                                 />
                                 {/* Botón de favorito */}
                                 <button
-                                    onClick={() => toggleFavorite(pet.id)}
+                                    onClick={() => toggleFavorite(pet)}
                                     className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
                                 >
                                     <svg 

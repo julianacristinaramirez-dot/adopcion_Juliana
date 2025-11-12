@@ -255,7 +255,7 @@ function MatchResults() {
                         🔄 Hacer el test de nuevo
                     </Link>
                     <Link
-                        to="/pets"
+                        to="/pets-list"
                         className="flex-1 bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-semibold py-4 px-6 rounded-xl hover:from-teal-700 hover:to-cyan-700 transition-all transform hover:scale-105 shadow-lg text-center"
                     >
                         🐾 Ver todas las mascotas
