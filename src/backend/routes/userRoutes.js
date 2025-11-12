@@ -92,14 +92,18 @@ router.post('/',userControllers.createUser);
  *                 type: string
  *                 example: active
  *     responses:
- *       200:
- *         description: Usuario actualizado correctamente
- *       400:
- *         description: Datos inválidos
- *       404:
- *         description: Usuario no encontrado
- *       500:
- *         description: Error interno del servidor
+ *      200:
+ *        description: Usuario actualizado correctamente
+ *        content:
+ *          application/json:
+ *            $ref: '#/components/schemas/User'
+ *      400:
+ *        description: Datos invalidos
+ *      404:
+ *        description: Usuario no encontrado
+ *      500:
+ *        description: Error del servidor
+ * 
  */
 
 router.put('/:id',userControllers.updateUser);

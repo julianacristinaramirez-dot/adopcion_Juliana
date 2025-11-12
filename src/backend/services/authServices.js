@@ -1,40 +1,55 @@
-import pkg from '@prisma/client';
-const { PrismaClient } = pkg;
-import { hashPassword, comparePassword, generateToken } from '../utils/auth.js';
+import { PrismaClient } from "@prisma/client";
+import { hashPassword, comparePassword, generateToken } from "../utils/auth.js";
 
 const prisma = new PrismaClient();
 
 export const authServices = {
-  // Registrar usuario
-  async registerUser(data) {
+  //Registrar usuario
+  async register(data) {
     try {
       const { email, name, password } = data;
-
-      // 1️⃣ Encriptar contraseña
       const hashedPassword = await hashPassword(password);
-
-      // 2️⃣ Crear usuario en la base de datos
       const user = await prisma.user.create({
-        data: {
-          email,
-          name,
-          password: hashedPassword,
-        },
+        data: { email, name, password: hashedPassword },
       });
-
-      // 3️⃣ Generar token
+    
+      //Enviar token
       const token = generateToken(user.id, user.email);
+      
+      //Enviar usuario sin password
+      const {password: _, ...userWithoutPassword } = user;
+      return{
+        user: userWithoutPassword,
+        token,
+      }
+    } catch (error) {
+        throw new Error("Error al registrar usuario" + error);
+    }
+  },
 
-      // 4️⃣ Enviar usuario sin contraseña
-      const { password: _, ...userWithoutPassword } = user;
+  async login(data){
+    try{
+      const { email, password } = data;
+      const user = await prisma.user.findUnique({
+        where: { email }
+      });
+      if (!user){
+        throw new Error("Email no encontrado");
+      }
 
-      return {
+      const isPasswordValid = await comparePassword(password, user.password);
+      if (!isPasswordValid){
+        throw new Error("Contraseña incorrecta");
+      }
+
+      const token = generateToken(user.id, user.email);
+      const {password: _, ...userWithoutPassword } = user;
+      return{
         user: userWithoutPassword,
         token,
       };
-
-    } catch (error) {
-      throw new Error('Error registering user: ' + error.message);
+    }catch(error){
+      throw new Error(error.message || "Error al iniciar sesion");
     }
-  },
+  }
 };

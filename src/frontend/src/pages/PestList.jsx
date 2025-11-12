@@ -58,7 +58,7 @@ function PetsList() {
         {
             id: 4,
             name: 'Luna',
-            image: '/Imagenes/luna.jpg', // Añade esta imagen
+            image: '/Imagenes/Luna.jpg', // Añade esta imagen
             shelter: 'Refugio Amoroso, Sevilla',
             species: 'PERRO',
             breed: 'Beagle',
@@ -70,7 +70,7 @@ function PetsList() {
         {
             id: 5,
             name: 'Bigotes',
-            image: '/imagenes/bigotes.jpg', // Añade esta imagen
+            image: '/Imagenes/Bigotes.jpg', // Añade esta imagen
             shelter: 'Refugio Gatuno, Málaga',
             species: 'GATO',
             breed: 'Persa',
@@ -82,7 +82,7 @@ function PetsList() {
         {
             id: 6,
             name: 'Rocky',
-            image: '/imagenes/rocky.jpg', // Añade esta imagen
+            image: '/Imagenes/Rocky.jpg', // Añade esta imagen
             shelter: 'Refugio Canino, Bilbao',
             species: 'PERRO',
             breed: 'Husky Siberiano',
@@ -152,9 +152,11 @@ function PetsList() {
                             <button className="px-6 py-2 bg-white text-gray-800 font-semibold rounded-lg hover:bg-gray-100 border-2 border-gray-300 transform hover:scale-105 transition-all duration-200 shadow-md">
                                 <Link to="/match-quiz">Encuentra tu Match</Link>
                             </button>
-                            <button className="px-6 py-2 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transform hover:scale-105 transition-all duration-200 shadow-md">
-                                Perfil
-                            </button>
+                            <Link to="/profile">
+                                <button className="px-6 py-2 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transform hover:scale-105 transition-all duration-200 shadow-md">
+                                    Perfil
+                                </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
