@@ -10,11 +10,12 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  email String @unique
-  name String 
-  password String? //Metodo tradicional
-  googleId String? @unique //Metodo de login con Google
-  avatar String? //Obtener la foto de perfil de Google
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String?  // Metodo tradicional
+  googleId  String?  @unique // Metodo de login con Google
+  avatar    String?  // Foto de perfil de Google
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
-
