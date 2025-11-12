@@ -78,16 +78,18 @@ function Home() {
                 </div>
 
                 {/* Botones principales */}
-                <Link to="/match-quiz">
-                    <button className="px-8 py-4 bg-white text-gray-800 text-lg font-semibold rounded-lg border-2 border-gray-800 hover:bg-gray-100 transform hover:scale-105 hover:shadow-xl transition-all duration-300">
-                        Encuentra tu match
-                    </button>
-                </Link>
-                <Link to="/pets">
+                <div className="flex flex-col sm:flex-row justify-center gap-6 mb-20">
+                    <Link to="/match-quiz">
+                        <button className="px-8 py-4 bg-white text-gray-800 text-lg font-semibold rounded-lg border-2 border-gray-800 hover:bg-gray-100 transform hover:scale-105 hover:shadow-xl transition-all duration-300">
+                            Encuentra tu match
+                        </button>
+                    </Link>
+                <Link to="/pets-list">
                     <button className="px-8 py-4 bg-teal-600 text-white text-lg font-semibold rounded-lg hover:bg-teal-700 transform hover:scale-105 hover:shadow-xl transition-all duration-300">
                         Ver mascotas
                     </button>
                 </Link>
+            </div>
 
 
                 {/* Sección de características */}

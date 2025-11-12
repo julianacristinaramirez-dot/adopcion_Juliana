@@ -13,7 +13,7 @@ function PetsList() {
         {
             id: 1,
             name: 'Loki',
-            image: '/imagenes/loki.jpg', // Ajusta la ruta según tu estructura
+            image: '/Imagenes/image 3.png', // Ajusta la ruta según tu estructura
             shelter: 'Refugio San Francisco, Barcelona',
             species: 'PERRO',
             breed: 'Pastor Alemán',
@@ -25,7 +25,7 @@ function PetsList() {
         {
             id: 2,
             name: 'Mimi',
-            image: '/imagenes/mimi.jpg',
+            image: '/Imagenes/image 2.png',
             shelter: 'Refugio Felino, Valencia',
             species: 'GATO',
             breed: 'Siamés',
@@ -37,7 +37,7 @@ function PetsList() {
         {
             id: 3,
             name: 'Drako',
-            image: '/imagenes/drako.jpg',
+            image: '/Imagenes/image 4.png', // Añade esta imagen
             shelter: 'Refugio Esperanza, Madrid',
             species: 'PERRO',
             breed: 'Golden Retriever',
@@ -49,7 +49,7 @@ function PetsList() {
         {
             id: 4,
             name: 'Luna',
-            image: '/imagenes/luna.jpg', // Añade esta imagen
+            image: '/Imagenes/luna.jpg', // Añade esta imagen
             shelter: 'Refugio Amoroso, Sevilla',
             species: 'PERRO',
             breed: 'Beagle',
@@ -61,7 +61,7 @@ function PetsList() {
         {
             id: 5,
             name: 'Bigotes',
-            image: '/imagenes/bigotes.jpg', // Añade esta imagen
+            image: '/Imagenes/bigotes.jpg', // Añade esta imagen
             shelter: 'Refugio Gatuno, Málaga',
             species: 'GATO',
             breed: 'Persa',
@@ -73,7 +73,7 @@ function PetsList() {
         {
             id: 6,
             name: 'Rocky',
-            image: '/imagenes/rocky.jpg', // Añade esta imagen
+            image: '/Imagenes/rocky.jpg', // Añade esta imagen
             shelter: 'Refugio Canino, Bilbao',
             species: 'PERRO',
             breed: 'Husky Siberiano',
@@ -121,18 +121,24 @@ function PetsList() {
 
                         {/* Botones de navegación */}
                         <div className="flex gap-4">
-                            <button className="flex items-center gap-2 px-6 py-2 bg-white text-gray-800 font-semibold rounded-lg hover:bg-gray-100 border-2 border-gray-300 transform hover:scale-105 transition-all duration-200 shadow-md">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                </svg>
-                                Favoritos
-                            </button>
-                            <button className="px-6 py-2 bg-white text-gray-800 font-semibold rounded-lg hover:bg-gray-100 border-2 border-gray-300 transform hover:scale-105 transition-all duration-200 shadow-md">
-                                Encuentra tu Match
-                            </button>
-                            <button className="px-6 py-2 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transform hover:scale-105 transition-all duration-200 shadow-md">
-                                Perfil
-                            </button>
+                            <Link to="/pets-list" className="flex items-center gap-4">
+                                <button className="flex items-center gap-2 px-6 py-2 bg-white text-gray-800 font-semibold rounded-lg hover:bg-gray-100 border-2 border-gray-300 transform hover:scale-105 transition-all duration-200 shadow-md">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                    </svg>
+                                    Favoritos
+                                </button>
+                            </Link>
+                            <Link to="/match-quiz">
+                                <button className="px-6 py-2 bg-white text-gray-800 font-semibold rounded-lg hover:bg-gray-100 border-2 border-gray-300 transform hover:scale-105 transition-all duration-200 shadow-md">
+                                    Encuentra tu Match
+                                </button>
+                            </Link>
+                            <Link to="/pets-list">
+                                <button className="px-6 py-2 bg-teal-600 text-white font-semibold rounded-lg hover:bg-teal-700 transform hover:scale-105 transition-all duration-200 shadow-md">
+                                    Perfil
+                                </button>
+                            </Link>
                         </div>
                     </div>
                 </div>

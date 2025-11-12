@@ -76,6 +76,7 @@ function Register() {
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-teal-200 via-cyan-200 to-teal-300 py-12 px-4">
             <div className="w-full max-w-md">
                 {/* Logo */}
+                <Link to="/" className="flex items-center justify-center gap-4 mb-8">
                 <div className="flex items-center justify-center gap-4 mb-8">
                     <div className="relative">
                         <div className="w-16 h-16 bg-black rounded-t-full flex items-center justify-center">
@@ -85,6 +86,7 @@ function Register() {
                     </div>
                     <h1 className="text-4xl font-bold text-gray-800">Huellitas JR</h1>
                 </div>
+                </Link>
 
                 {/* Register Box */}
                 <div className="bg-white/95 rounded-2xl shadow-2xl p-8">
@@ -152,24 +154,6 @@ function Register() {
                                 value={formData.email}
                                 onChange={handleChange}
                                 required
-                                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                            />
-                        </div>
-
-                        {/* Teléfono */}
-                        <div>
-                            <label 
-                                htmlFor="telefono" 
-                                className="block text-sm font-medium text-gray-700 mb-2"
-                            >
-                                Teléfono
-                            </label>
-                            <input
-                                type="tel"
-                                id="telefono"
-                                name="telefono"
-                                value={formData.telefono}
-                                onChange={handleChange}
                                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
                             />
                         </div>
