@@ -19,3 +19,45 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Pets {
+  id          Int      @id @default(autoincrement())
+  name        String
+  image       String   
+  species     Species  
+  breed       String
+  age         Int      
+  size        Size     
+  gender      Gender  
+  description String
+
+  // Relación con el refugio 
+  shelter     Shelter  @relation(fields: [shelterId], references: [id])
+  shelterId   Int      
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Shelter {
+  id       Int    @id @default(autoincrement())
+  name     String
+  location String 
+  pets     Pets[]
+}
+
+enum Species {
+  PERRO
+  GATO
+  OTRO
+}
+
+enum Size {
+  PEQUEÑO
+  MEDIANO
+  GRANDE
+}
+
+enum Gender {
+  MACHO
+  HEMBRA
+}

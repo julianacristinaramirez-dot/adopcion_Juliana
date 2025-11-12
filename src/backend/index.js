@@ -2,11 +2,12 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import passport from "passport";
-import "./config/passport.js"; 
+import "./config/passport.js";
 import session from "express-session";
 import userRoutes from "./routes/userRoutes.js";
 import emailRoutes from "./routes/emailRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import petsRoutes from "./routes/petsRoutes.js";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./swagger.js";
 
@@ -39,6 +40,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", userRoutes);
 app.use("/api/email", emailRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/pets", petsRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo y escuchando en el puerto ${PORT}`);
