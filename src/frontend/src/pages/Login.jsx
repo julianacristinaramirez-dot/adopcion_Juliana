@@ -15,7 +15,28 @@ function Login() {
         setError(null);
 
         try {
+            // Aquí va tu lógica de autenticación
             console.log("Login:", { email, password });
+            
+            // Ejemplo de llamada a API:
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Guardar token y datos del usuario
+                localStorage.setItem('authToken', data.token);
+                localStorage.setItem('user', JSON.stringify({
+                    name: data.user.name,
+                    email: data.user.email
+                }));
+                navigate('/');
+            } else {
+                setError(data.message);
+            }
 
         } catch (err) {
             setError("Error al iniciar sesión. Intenta nuevamente.");
@@ -27,7 +48,6 @@ function Login() {
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-teal-200 via-cyan-200 to-teal-300">
             <div className="w-full max-w-md">
                 {/* Logo */}
-                <Link to="/" className="flex items-center justify-center gap-4 mb-8">
                 <div className="flex items-center justify-center gap-4 mb-8">
                     <div className="relative">
                         <div className="w-16 h-16 bg-black rounded-t-full flex items-center justify-center">
@@ -37,7 +57,6 @@ function Login() {
                     </div>
                     <h1 className="text-4xl font-bold text-gray-800">Huellitas JR</h1>
                 </div>
-                </Link>
 
                 {/* Login Box */}
                 <div className="bg-white/95 rounded-2xl shadow-2xl p-8">
@@ -139,7 +158,7 @@ function Login() {
                     <div className="mt-6 text-center space-y-2">
                         <Link
                             to="/forgot-password"
-                            className="block text-sm text-teal-600 hover:text-teal-700 hover:underline transition-colors"
+                            className="block text-sm text-teal-600 hover:text-teal-700 hover:underline transition-colors font-medium"
                         >
                             ¿Olvidaste tu contraseña?
                         </Link>

@@ -6,7 +6,10 @@ import LoginSuccess from "./pages/LoginSuccess";
 import LoginError from './pages/LoginError';
 import MatchQuiz from "./pages/Match";
 import MatchResults from "./pages/MatchResults";
-import PetsList from "./pages/PetsList";
+import PetsList from "./pages/petsList";
+import Favorites from './components/Favorites';
+import Profile from './components/Profile';
+import ForgotPassword from './components/ForgotPassword';
 
 
 function App() {
@@ -21,6 +24,9 @@ function App() {
         <Route path="/match-quiz" element={<MatchQuiz />} />
         <Route path="/match-results" element={<MatchResults />} />
         <Route path="/pets-list" element={<PetsList />} />
+        <Route path="/favorites" element={<Favorites />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </BrowserRouter>
   );
