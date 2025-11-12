@@ -10,9 +10,12 @@ export const petsControllers = {
         data: pets,
       });
     } catch (error) {
+      console.error("🔥 Error en getPets:", error); // 👈 muestra el error real en consola
       res.status(500).json({
         success: false,
         message: error.message,
+        // puedes comentar la siguiente línea si no quieres ver el stack completo
+        stack: error.stack, 
       });
     }
   },
@@ -24,7 +27,6 @@ export const petsControllers = {
       const { name, species, age, shelterId } = petData;
       if (!name || !species || !age || !shelterId) {
         return res.status(400).json({
-          // 400 Bad Request
           success: false,
           message:
             "Los campos name, species, age y shelterId son obligatorios.",
@@ -39,14 +41,12 @@ export const petsControllers = {
         message: "Mascota creada correctamente",
       });
     } catch (error) {
+      console.error("🔥 Error en createPet:", error); // 👈 muestra errores al crear mascotas
       res.status(500).json({
         success: false,
         message: error.message,
+        stack: error.stack,
       });
     }
   },
-
-  // async getPetById(req, res) { ... }
-  // async updatePet(req, res) { ... }
-  // async deletePet(req, res) { ... }
 };

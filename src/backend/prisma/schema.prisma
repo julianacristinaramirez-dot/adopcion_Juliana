@@ -48,7 +48,7 @@ enum Species {
 }
 
 enum Size {
-  // PEQUEÑO
+  PEQUEÑO
   MEDIANO
   GRANDE
 }
@@ -57,3 +57,5 @@ enum Gender {
   MACHO
   HEMBRA
 }
+
+
