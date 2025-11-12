@@ -117,7 +117,7 @@ function MatchQuiz() {
                         </Link>
 
                         <Link
-                            to="/pets-list2"
+                            to="/pets-list"
                             className="px-6 py-2 bg-white text-gray-800 font-semibold rounded-lg hover:bg-gray-100 border-2 border-gray-300 transform hover:scale-105 transition-all duration-200 shadow-md"
                         >
                             Ver todas las mascotas

@@ -85,7 +85,7 @@ function Home() {
 
                 {/* Botones principales */}
                 <div className="flex flex-col sm:flex-row justify-center gap-6 mb-20">
-                    <Link to="/pets-list2">
+                    <Link to="/pets-list">
                     <button className="px-8 py-4 bg-teal-600 text-white text-lg font-semibold rounded-lg hover:bg-teal-700 transform hover:scale-105 hover:shadow-xl transition-all duration-300">
                         Ver mascotas
                     </button>
