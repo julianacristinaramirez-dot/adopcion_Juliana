@@ -1,5 +1,3 @@
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,9 +11,9 @@ model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
   name      String
-  password  String?  // Metodo tradicional
-  googleId  String?  @unique // Metodo de login con Google
-  avatar    String?  // Foto de perfil de Google
+  avatar    String?
+  googleId  String?  @unique
+  password  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -23,25 +21,23 @@ model User {
 model Pets {
   id          Int      @id @default(autoincrement())
   name        String
-  image       String   
-  species     Species  
+  image       String
+  species     Species
   breed       String
-  age         Int      
-  size        Size     
-  gender      Gender  
+  age         Int
+  size        Size
+  gender      Gender
   description String
-
-  // Relación con el refugio 
-  shelter     Shelter  @relation(fields: [shelterId], references: [id])
-  shelterId   Int      
+  shelterId   Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  shelter     Shelter  @relation(fields: [shelterId], references: [id])
 }
 
 model Shelter {
   id       Int    @id @default(autoincrement())
   name     String
-  location String 
+  location String
   pets     Pets[]
 }
 
@@ -52,7 +48,7 @@ enum Species {
 }
 
 enum Size {
-  PEQUEÑO
+  // PEQUEÑO
   MEDIANO
   GRANDE
 }
