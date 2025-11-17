@@ -13,26 +13,42 @@ function PetsList() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const savedFavorites = localStorage.getItem("favorites");
+    if (savedFavorites) {
+      setFavorites(JSON.parse(savedFavorites));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
+
+  useEffect(() => {
     const fetchPets = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3000/api/pets');
+        const response = await fetch("http://localhost:3000/api/pets");
 
         if (!response.ok) {
-          throw new Error('No se pudo obtener la lista de mascotas');
+          throw new Error("No se pudo obtener la lista de mascotas");
         }
 
         const responseData = await response.json();
 
         // Verificamos que la petición fue exitosa y que la propiedad 'data' existe
-        if (responseData && responseData.success && Array.isArray(responseData.data)) {
+        if (
+          responseData &&
+          responseData.success &&
+          Array.isArray(responseData.data)
+        ) {
           setAllPets(responseData.data);
           setFilteredPets(responseData.data);
           setError(null);
         } else {
-          throw new Error('La respuesta de la API no tiene el formato esperado o no fue exitosa.');
+          throw new Error(
+            "La respuesta de la API no tiene el formato esperado o no fue exitosa."
+          );
         }
-
       } catch (err) {
         setError(err.message);
       } finally {
@@ -41,7 +57,7 @@ function PetsList() {
     };
 
     fetchPets();
-  }, []); 
+  }, []);
 
   useEffect(() => {
     let petsToFilter = [...allPets];
@@ -72,11 +88,14 @@ function PetsList() {
   }, [searchTerm, selectedSpecies, selectedSize, selectedAge, allPets]);
 
   const toggleFavorite = (pet) => {
-    setFavorites((prevFavorites) =>
-      prevFavorites.includes(pet.id)
-        ? prevFavorites.filter((id) => id !== pet.id)
-        : [...prevFavorites, pet.id]
-    );
+    setFavorites((prevFavorites) => {
+      const isFav = prevFavorites.some((fav) => fav.id === pet.id);
+      if (isFav) {
+        return prevFavorites.filter((fav) => fav.id !== pet.id);
+      } else {
+        return [...prevFavorites, pet];
+      }
+    });
   };
 
   if (loading) {
@@ -251,7 +270,38 @@ function PetsList() {
                   onClick={() => toggleFavorite(pet)}
                   className="absolute top-4 right-4 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
                 >
-                  {/* ... SVG de favorito ... */}
+                  {favorites.some((fav) => fav.id === pet.id) ? (
+                    // ❤️ Corazón lleno
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="red"
+                      viewBox="0 0 24 24"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
+      2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 
+      4.5 2.09C13.09 3.81 14.76 3 16.5 3 
+      19.58 3 22 5.42 22 8.5c0 3.78-3.4 
+      6.86-8.55 11.54L12 21.35z"
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      stroke="red"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      />
+                    </svg>
+                  )}
                 </button>
               </div>
               <div className="p-6">

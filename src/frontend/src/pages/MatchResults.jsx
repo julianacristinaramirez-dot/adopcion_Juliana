@@ -5,103 +5,101 @@ function MatchResults() {
     const navigate = useNavigate();
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Obtener respuestas del test
-        const answersStr = localStorage.getItem('matchAnswers');
-        
-        if (!answersStr) {
-            navigate('/match-quiz');
-            return;
-        }
+        const fetchAndCalculateMatches = async () => {
+            try {
+                // Obtener respuestas del test
+                const answersStr = localStorage.getItem('matchAnswers');
+                
+                if (!answersStr) {
+                    navigate('/match-quiz');
+                    return;
+                }
 
-        const answers = JSON.parse(answersStr);
-        
-        // Simular cálculo de compatibilidad
-        setTimeout(() => {
-            const calculatedMatches = calculateMatches(answers);
-            setMatches(calculatedMatches);
-            setLoading(false);
-        }, 1500);
+                const answers = JSON.parse(answersStr);
+                
+                // Obtener todas las mascotas desde la API
+                const response = await fetch('http://localhost:3000/api/pets');
+                
+                if (!response.ok) {
+                    throw new Error('No se pudieron obtener las mascotas');
+                }
+
+                const data = await response.json();
+                
+                if (!data.success || !Array.isArray(data.data)) {
+                    throw new Error('Formato de respuesta inválido');
+                }
+
+                // Calcular compatibilidad
+                const calculatedMatches = calculateMatches(answers, data.data);
+                
+                // Simular delay para mostrar animación de carga
+                setTimeout(() => {
+                    setMatches(calculatedMatches);
+                    setLoading(false);
+                }, 1500);
+
+            } catch (err) {
+                console.error('Error al obtener matches:', err);
+                setError(err.message);
+                setLoading(false);
+            }
+        };
+
+        fetchAndCalculateMatches();
     }, [navigate]);
 
-    // Función para calcular compatibilidad basada en respuestas
-    const calculateMatches = (answers) => {
-        const allPets = [
-            {
-                id: 1,
-                name: 'Drako',
-                image: '/imagenes/drako.jpg',
-                shelter: 'Refugio Esperanza, Madrid',
-                species: 'PERRO',
-                breed: 'Golden Retriever',
-                age: '2 años',
-                size: 'Grande',
-                gender: 'Macho',
-                compatibility: 90,
-                traits: ['casa_jardin', 'mas_2', 'mucha', 'perro', 'mayores']
-            },
-            {
-                id: 2,
-                name: 'Luna',
-                image: '/imagenes/luna.jpg',
-                shelter: 'Refugio Amoroso, Sevilla',
-                species: 'PERRO',
-                breed: 'Beagle',
-                age: '3 años',
-                size: 'Mediano',
-                gender: 'Hembra',
-                compatibility: 85,
-                traits: ['casa_patio', '1_2_horas', 'bastante', 'perro', 'pequenos']
-            },
-            {
-                id: 3,
-                name: 'Mimi',
-                image: '/imagenes/mimi.jpg',
-                shelter: 'Refugio Felino, Valencia',
-                species: 'GATO',
-                breed: 'Siamés',
-                age: '1 año',
-                size: 'Pequeño',
-                gender: 'Hembra',
-                compatibility: 78,
-                traits: ['apartamento', 'menos_30', 'algo', 'gato', 'no']
-            },
-            {
-                id: 4,
-                name: 'Rocky',
-                image: '/imagenes/rocky.jpg',
-                shelter: 'Refugio Canino, Bilbao',
-                species: 'PERRO',
-                breed: 'Husky Siberiano',
-                age: '2 años',
-                size: 'Grande',
-                gender: 'Macho',
-                compatibility: 82,
-                traits: ['finca', 'mas_2', 'mucha', 'perro', 'adolescentes']
-            }
-        ];
+    // Función mejorada para calcular compatibilidad basada en respuestas
+    const calculateMatches = (answers, allPets) => {
+        // Mapear las respuestas del test a características de las mascotas
+        const userPreferences = {
+            vivienda: answers[1], // apartamento, casa_jardin, casa_patio, finca
+            ejercicio: answers[2], // menos_30, 30_60, 1_2_horas, mas_2
+            experiencia: answers[3], // ninguna, algo, bastante, mucha
+            tipo: answers[4], // perro, gato, ambos
+            ninos: answers[5] // no, pequenos, mayores, adolescentes
+        };
 
-        // Calcular compatibilidad real basada en respuestas
+        // Calcular compatibilidad para cada mascota
         const scoredPets = allPets.map(pet => {
             let score = 0;
-            let maxScore = 0;
+            let maxScore = 100;
 
-            Object.entries(answers).forEach(([questionId, answer]) => {
-                maxScore += 20;
-                if (pet.traits.includes(answer)) {
-                    score += 20;
-                } else {
-                    // Compatibilidad parcial
-                    score += 5;
-                }
-            });
+            // 1. Compatibilidad por tipo de mascota (30 puntos)
+            if (userPreferences.tipo === 'ambos') {
+                score += 30; // Le gustan ambos
+            } else if (userPreferences.tipo === 'perro' && pet.species === 'PERRO') {
+                score += 30;
+            } else if (userPreferences.tipo === 'gato' && pet.species === 'GATO') {
+                score += 30;
+            } else {
+                score += 5; // Penalización si no coincide
+            }
+
+            // 2. Compatibilidad por tamaño y vivienda (25 puntos)
+            const viviendaScore = getViviendaScore(userPreferences.vivienda, pet.size);
+            score += viviendaScore;
+
+            // 3. Compatibilidad por edad y experiencia (20 puntos)
+            const experienciaScore = getExperienciaScore(userPreferences.experiencia, pet.age);
+            score += experienciaScore;
+
+            // 4. Compatibilidad por ejercicio y especie (15 puntos)
+            const ejercicioScore = getEjercicioScore(userPreferences.ejercicio, pet.species, pet.size);
+            score += ejercicioScore;
+
+            // 5. Compatibilidad con niños (10 puntos)
+            const ninosScore = getNinosScore(userPreferences.ninos, pet.age, pet.species);
+            score += ninosScore;
 
             const compatibility = Math.round((score / maxScore) * 100);
             
             return {
                 ...pet,
-                compatibility: Math.min(compatibility, 95) // Máximo 95%
+                compatibility: Math.min(compatibility, 98) // Máximo 98%
             };
         });
 
@@ -111,13 +109,136 @@ function MatchResults() {
             .slice(0, 3);
     };
 
+    // Funciones auxiliares para calcular scores específicos
+    const getViviendaScore = (vivienda, size) => {
+        const sizeUpper = size?.toUpperCase();
+        
+        if (vivienda === 'finca') return 25; // Cualquier tamaño está bien en finca
+        if (vivienda === 'casa_jardin') {
+            if (sizeUpper === 'GRANDE') return 25;
+            if (sizeUpper === 'MEDIANO') return 23;
+            return 20;
+        }
+        if (vivienda === 'casa_patio') {
+            if (sizeUpper === 'MEDIANO') return 25;
+            if (sizeUpper === 'PEQUEÑO') return 23;
+            if (sizeUpper === 'GRANDE') return 15;
+        }
+        if (vivienda === 'apartamento') {
+            if (sizeUpper === 'PEQUEÑO') return 25;
+            if (sizeUpper === 'MEDIANO') return 15;
+            return 10;
+        }
+        return 10;
+    };
+
+    const getExperienciaScore = (experiencia, age) => {
+        if (experiencia === 'mucha') return 20; // Puede manejar cualquier edad
+        if (experiencia === 'bastante') {
+            return age <= 5 ? 20 : 18;
+        }
+        if (experiencia === 'algo') {
+            return age >= 2 && age <= 7 ? 20 : 15;
+        }
+        // ninguna experiencia
+        return age >= 3 && age <= 6 ? 20 : 12;
+    };
+
+    const getEjercicioScore = (ejercicio, species, size) => {
+        const sizeUpper = size?.toUpperCase();
+        
+        if (species === 'GATO') {
+            return ejercicio === 'menos_30' || ejercicio === '30_60' ? 15 : 12;
+        }
+        
+        // Para perros
+        if (ejercicio === 'mas_2') {
+            return sizeUpper === 'GRANDE' ? 15 : 12;
+        }
+        if (ejercicio === '1_2_horas') {
+            return sizeUpper === 'MEDIANO' || sizeUpper === 'GRANDE' ? 15 : 13;
+        }
+        if (ejercicio === '30_60') {
+            return sizeUpper === 'PEQUEÑO' || sizeUpper === 'MEDIANO' ? 15 : 12;
+        }
+        // menos_30
+        return sizeUpper === 'PEQUEÑO' ? 15 : 10;
+    };
+
+    const getNinosScore = (ninos, age, species) => {
+        if (ninos === 'no') return 10; // Cualquier mascota está bien
+        
+        // Con niños pequeños, preferir mascotas adultas (3+ años)
+        if (ninos === 'pequenos') {
+            return age >= 3 ? 10 : 6;
+        }
+        
+        // Con niños mayores, más flexible
+        if (ninos === 'mayores') {
+            return age >= 2 ? 10 : 8;
+        }
+        
+        // Adolescentes
+        return 10;
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-teal-100 via-cyan-100 to-blue-100 flex items-center justify-center">
                 <div className="text-center">
                     <div className="w-24 h-24 border-8 border-teal-200 border-t-teal-600 rounded-full animate-spin mb-6 mx-auto"></div>
                     <p className="text-2xl font-bold text-gray-800">Calculando tus matches perfectos...</p>
-                    <p className="text-gray-600 mt-2">Analizando compatibilidad</p>
+                    <p className="text-gray-600 mt-2">Analizando compatibilidad con {matches.length > 0 ? 'todas' : 'las'} mascotas disponibles</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-teal-100 via-cyan-100 to-blue-100 flex items-center justify-center">
+                <div className="text-center max-w-md">
+                    <div className="bg-white rounded-2xl shadow-xl p-8">
+                        <svg className="w-16 h-16 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">Error al cargar matches</h2>
+                        <p className="text-gray-600 mb-6">{error}</p>
+                        <div className="flex gap-4">
+                            <Link
+                                to="/match-quiz"
+                                className="flex-1 bg-teal-600 text-white font-semibold py-3 rounded-lg hover:bg-teal-700 transition-all"
+                            >
+                                Reintentar test
+                            </Link>
+                            <Link
+                                to="/pets-list"
+                                className="flex-1 bg-white border-2 border-gray-300 text-gray-800 font-semibold py-3 rounded-lg hover:bg-gray-100 transition-all"
+                            >
+                                Ver todas
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (matches.length === 0) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-teal-100 via-cyan-100 to-blue-100 flex items-center justify-center">
+                <div className="text-center max-w-md">
+                    <div className="bg-white rounded-2xl shadow-xl p-8">
+                        <p className="text-6xl mb-4">🐾</p>
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">No hay mascotas disponibles</h2>
+                        <p className="text-gray-600 mb-6">No pudimos encontrar mascotas en este momento. Por favor, intenta más tarde.</p>
+                        <Link
+                            to="/"
+                            className="inline-block bg-teal-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-teal-700 transition-all"
+                        >
+                            Volver al inicio
+                        </Link>
+                    </div>
                 </div>
             </div>
         );
@@ -140,7 +261,7 @@ function MatchResults() {
                         </Link>
 
                         <Link
-                            to="/pets"
+                            to="/pets-list"
                             className="px-6 py-2 bg-white text-gray-800 font-semibold rounded-lg hover:bg-gray-100 border-2 border-gray-800 transform hover:scale-105 transition-all duration-200 shadow-md"
                         >
                             Ver todas las mascotas
@@ -205,8 +326,8 @@ function MatchResults() {
                                 <div className="p-6">
                                     <div className="flex justify-between items-start mb-3">
                                         <h3 className="text-3xl font-black text-gray-800">{pet.name}</h3>
-                                        <span className="px-3 py-1 bg-teal-600 text-white text-xs font-bold rounded-full">
-                                            {pet.species}
+                                        <span className="px-3 py-1 bg-teal-600 text-white text-xs font-bold rounded-full capitalize">
+                                            {pet.species.toLowerCase()}
                                         </span>
                                     </div>
 
@@ -215,27 +336,33 @@ function MatchResults() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                         </svg>
-                                        <span className="font-medium">{pet.shelter}</span>
+                                        <span className="font-medium">{pet.shelter?.name || 'Refugio'}, {pet.shelter?.location || 'Ubicación'}</span>
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-2 mb-4 text-sm">
                                         <div>
                                             <span className="font-bold text-gray-700">Raza:</span>
-                                            <p className="text-gray-800">{pet.breed}</p>
+                                            <p className="text-gray-800">{pet.breed || 'Mestizo'}</p>
                                         </div>
                                         <div>
                                             <span className="font-bold text-gray-700">Edad:</span>
-                                            <p className="text-gray-800">{pet.age}</p>
+                                            <p className="text-gray-800">{pet.age} {pet.age === 1 ? 'año' : 'años'}</p>
                                         </div>
                                         <div>
                                             <span className="font-bold text-gray-700">Tamaño:</span>
-                                            <p className="text-gray-800">{pet.size}</p>
+                                            <p className="text-gray-800 capitalize">{pet.size?.toLowerCase() || 'Mediano'}</p>
                                         </div>
                                         <div>
                                             <span className="font-bold text-gray-700">Género:</span>
-                                            <p className="text-gray-800">{pet.gender}</p>
+                                            <p className="text-gray-800 capitalize">{pet.gender?.toLowerCase() || 'N/A'}</p>
                                         </div>
                                     </div>
+
+                                    {pet.description && (
+                                        <p className="text-sm text-gray-700 mb-4 leading-relaxed line-clamp-3">
+                                            {pet.description}
+                                        </p>
+                                    )}
 
                                     <button className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold py-3 rounded-lg hover:from-teal-700 hover:to-cyan-700 transition-all transform hover:scale-105 shadow-lg">
                                         Adoptar
@@ -263,7 +390,7 @@ function MatchResults() {
                 </div>
             </div>
 
-            <style jsx>{`
+            <style>{`
                 @keyframes fade-in {
                     from {
                         opacity: 0;
@@ -292,6 +419,13 @@ function MatchResults() {
 
                 .animate-slide-up {
                     animation: slide-up 0.6s ease-out;
+                }
+
+                .line-clamp-3 {
+                    display: -webkit-box;
+                    -webkit-line-clamp: 3;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
                 }
             `}</style>
         </div>
